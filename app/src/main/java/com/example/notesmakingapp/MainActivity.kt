@@ -33,6 +33,10 @@ class MainActivity : AppCompatActivity(), INotesRVAdapter {
         submitButton = findViewById(R.id.addButton)
         input = findViewById(R.id.input)
 
+        submitButton.setOnClickListener {
+            submitData(it)
+        }
+
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 
