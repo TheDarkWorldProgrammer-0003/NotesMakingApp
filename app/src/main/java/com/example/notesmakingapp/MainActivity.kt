@@ -8,6 +8,8 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,6 +35,13 @@ class MainActivity : AppCompatActivity(), INotesRVAdapter {
         submitButton = findViewById(R.id.addButton)
         input = findViewById(R.id.input)
 
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+
+
         submitButton.setOnClickListener {
             submitData(it)
         }
@@ -43,7 +52,10 @@ class MainActivity : AppCompatActivity(), INotesRVAdapter {
         val adapter = NotesRVAdapter(this, this)
         recyclerView.adapter = adapter
 
-        viewModel = ViewModelProvider(this, NoteViewModelFactory(application)).get(NoteViewModel::class.java)
+        viewModel = ViewModelProvider(
+            this,
+            NoteViewModelFactory(application)
+        ).get(NoteViewModel::class.java)
         viewModel.allNotes.observe(this, Observer { list ->
             list?.let {
                 adapter.updateList(it)
